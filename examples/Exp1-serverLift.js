@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 
 app.get('/', function(request, response) {
-  response.send('I\'m alive!');
+  response.sendStatus(404);
 });
 
 app.listen(8080, function(){
