@@ -1,4 +1,4 @@
-var Dog = require('../Lecture_2/Dog');
+var Dog = require('./Dog');
 module.exports = [
   new Dog('Brian'),
   new Dog('Tina Turner'),

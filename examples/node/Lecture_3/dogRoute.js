@@ -3,7 +3,7 @@ var parseUrlencoded = bodyParser.urlencoded({extend: false});
 var express = require('express');
 var router = express.Router();
 var dogs = require('./dogs');
-var Dog = require('../Lecture_2/Dog');
+var Dog = require('./Dog');
 
 router.route('/')
   .post(parseUrlencoded, function(request, response){
