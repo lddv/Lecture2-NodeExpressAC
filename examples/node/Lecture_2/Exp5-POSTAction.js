@@ -31,10 +31,11 @@ app.get('/wiggle/:doggyId', function(request, response) {
 
 app.post('/dog', parseUrlencoded, function(request, response){
   var data = request.body;
-  if(data){
+  if(data && data.name){
     var newDog = new Dog(data.name);
 
     dogs.push(newDog);
+    console.log('Oi, meu nome é ', newDog.getName());
 
     response.status(201).send('Dog added! Brian loved it.');
   } else {

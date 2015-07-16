@@ -12,7 +12,8 @@ var dogs = [
 ];
 
 app.route('/dog')
-  .post(parseUrlencoded, function(request, response){
+  .all(parseUrlencoded)
+  .post(function(request, response){
     var data = request.body;
     var newDog = new Dog(data.name);
 
@@ -20,7 +21,7 @@ app.route('/dog')
 
     response.status(201).send('Dog added! Brian loved it.');
   })
-  .put(parseUrlencoded, function(request, response){
+  .put(function(request, response){
     var dog = request.body;
     for(var x = dogs.length - 1; x >= 0; x--) {
       if(dogs[x].getName() === dog.name) {
@@ -35,9 +36,13 @@ app.route('/dog/:doggyId')
   .delete(parseUrlencoded, function(request, response){
     var doggyId = request.params.doggyId;
 
-    var dog = dogs.splice(doggyId, 1)[0];
+    if(doggyId && doggyId < dogs.length){
+      var dog = dogs.splice(doggyId, 1)[0];
 
-    response.json(dog);
+      response.json(dog);
+    } else {
+      response.sendStatus(401);
+    }
   });
 
 app.route('/goodDog/:doggyId')
@@ -45,6 +50,8 @@ app.route('/goodDog/:doggyId')
     var doggyIndex = request.params.doggyId;
     if(doggyIndex && doggyIndex < dogs.length) {
       response.send(dogs[doggyIndex].whoIsAGoodBoy());
+    } else {
+      response.sendStatus(401);
     }
   });
 
