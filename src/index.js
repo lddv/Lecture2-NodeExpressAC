@@ -12,6 +12,8 @@ var app = express();
 // Example: http://localhost:8989/?q=test
 var dao = require("./userDAO.js");
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.get('/', function(request, response){
   var messageIndex = request.query.q;
   if (messageIndex && messageIndex.length > 0) {
@@ -25,6 +27,12 @@ app.get('/', function(request, response){
   }
 });
 
+app.get('/users', function(request, response){
+  dao.listAllUsers(function(users){
+    response.send(users);
+  });
+});
+
 // Exercise 3:
 // Using the same server from Exercise 1 create a POST route that creates a
 // user. The data will come from a form action. You should validate you data,
@@ -34,13 +42,29 @@ app.post('/users', parseUrlencoded, function(request, response){
   var data = request.body;
   if(data){
     var newUser = new dao.createUser(data, function success(data) {
-      console.log('Oi, eu sou novo aqui! Meu nome é ', data);
+      console.log('Hi, I am new here! My name is ', data);
     });
 
     response.status(201).send('User added!');
   } else {
     response.sendStatus(403);
   }
+});
+
+// Exercise 4:
+// Using the same server from Exercise 1 create a GET dynamic route that get an
+// user by ID. This ID will be captured by the path's variable. In case that
+// the user does not exist, return an empty object.
+// This route's path should be "localhost:3000/users/:userId"
+app.get('/users/:userId', function(request, response){
+  var userId = request.params.userId;
+  dao.getUser(userId,
+    function(results){
+      response.send(results);
+    },
+    function(){
+      response.status(403).send([]);
+    });
 });
 
 app.listen(8989, function(){
