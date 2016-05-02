@@ -1,3 +1,6 @@
+var bodyParser = require('body-parser');
+var parseUrlencoded = bodyParser.urlencoded({extend: false});
+var path = require('path');
 var express = require('express');
 var app = express();
 
@@ -19,6 +22,24 @@ app.get('/', function(request, response){
     dao.listAllUsers(function(users){
       response.send(users);
     });
+  }
+});
+
+// Exercise 3:
+// Using the same server from Exercise 1 create a POST route that creates a
+// user. The data will come from a form action. You should validate you data,
+// it should exist. If it does not the request should fail.
+// This route's path should be "localhost:3000/users"
+app.post('/users', parseUrlencoded, function(request, response){
+  var data = request.body;
+  if(data){
+    var newUser = new dao.createUser(data, function success(data) {
+      console.log('Oi, eu sou novo aqui! Meu nome é ', data);
+    });
+
+    response.status(201).send('User added!');
+  } else {
+    response.sendStatus(403);
   }
 });
 
