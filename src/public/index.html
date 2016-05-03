@@ -72,7 +72,7 @@
           <div class="form-group">
             <label for="passwordUserId" class="col-md-4 control-label">User ID:</label>
             <div class="col-md-8">
-              <input type="text" name="passwordUserId" id="passwordUserId" class="form-control"/>
+              <input type="text" name="_id" id="passwordUserId" class="form-control"/>
             </div>
           </div>
           <div class="form-group">
@@ -118,7 +118,7 @@
           $('.requestResult').html(response);
         }
       },
-      error:function(request, status, error) {
+      error: function(request, status, error) {
         alert('An error has occured ' + error + '. Status: ' + status);
       }
     };
@@ -149,14 +149,14 @@
     makeAjaxCall('/users/' + $('#userId').val(), 'DELETE', 'Delete User By Id');
   };
   function updatePasswordById() {
-    makeAjaxCall('/users/' + $('#passwordUserId').val() + '/password', 'PUT', 'Update Password By Id');
+    makeAjaxCall('/users/password/' + $('#passwordUserId').val(), 'PUT', 'Update Password By Id');
   };
   $('#createUser').submit(function(event) {
     makeFormCall($(this), event, 'POST', 'Create User');
   });
   $('#changePassword').submit(function(event) {
     var form = $(this);
-    var url = form.attr("action") + '/' + $('#passwordUserId').val() + '/password';
+    var url = form.attr("action") + '/password/' + $('#passwordUserId').val();
     makeFormCall(form, event, 'PUT', 'Change Password', url);
   });
 </script>

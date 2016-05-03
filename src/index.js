@@ -90,6 +90,28 @@ app.delete('/users/:userId', function(request, response){
   console.log(deletedUser);
 });
 
+// Exercise 6:
+// Using the same server from Exercise 1 create a PUT dynamic route that change
+// an user password by ID. This ID will be captured by the path's variable.
+// The data will come from a form action. You should validate that, if there is
+// missing any data, the request should fail.
+// This route's path should be "localhost:3000/users/password/:userId"
+app.put('/users/password/:userId', parseUrlencoded, function(request, response){
+  var userId = request.params.userId;
+  var data = request.body;
+
+  if (data && data._id && data.oldPassword && data.newPassword) {
+    dao.changePassword(data,
+      function(){
+        console.log('trying to fulfill successCB');
+        response.status(201).send('Password updated!');
+      },
+      function(){
+        response.status(403).send('Failed to change password!');
+      });
+  }
+});
+
 app.listen(8989, function(){
   console.log('Listening on port 8989...');
 });
