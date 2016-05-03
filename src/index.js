@@ -1,3 +1,4 @@
+// http://tmeloliveira.github.io/acbook-nodejs/lecture2.html
 var bodyParser = require('body-parser');
 var parseUrlencoded = bodyParser.urlencoded({extend: false});
 var path = require('path');
@@ -65,29 +66,16 @@ app.get('/users/:userId', function(request, response){
 // Using the same server from Exercise 1 create a DELETE dynamic route that
 // delete an user by ID. This ID will be captured by the path's variable.
 // This route's path should be "localhost:3000/users/:userId"
-app.delete('/users/:userId', function(request, response){
-
-  var data = request.body;
-  if(data){
-    var newUser = new dao.createUser(data, function success(data) {
-      console.log('Hi, I am new here! My name is ', data);
-    });
-
-    response.status(201).send('User added!');
-  } else {
-    response.sendStatus(403);
-  }
+app.delete('/users/:userId', parseUrlencoded, function(request, response){
   var userId = request.params.userId;
-  var deletedUser = new dao.deleteUser(userId, function(request, response){
-    console.log('You just deleted a user with ID:', userId);
-    console.log('request:', request);
-    console.log('response:', response);
-    // response.sendStatus(204);
-  },
-  function(){
-    console.log('Unable to delete user with ID:', userId);
-  });
-  console.log(deletedUser);
+  var deletedUser = dao.deleteUser(userId, function(request, response){
+      console.log('deletedUser:', request);
+    },
+    function(){
+      console.log('Unable to delete user with ID:', userId);
+    }
+  );
+  response.status(204).send(deletedUser);
 });
 
 // Exercise 6:
@@ -97,9 +85,7 @@ app.delete('/users/:userId', function(request, response){
 // missing any data, the request should fail.
 // This route's path should be "localhost:3000/users/password/:userId"
 app.put('/users/password/:userId', parseUrlencoded, function(request, response){
-  var userId = request.params.userId;
   var data = request.body;
-
   if (data && data._id && data.oldPassword && data.newPassword) {
     dao.changePassword(data,
       function(){
